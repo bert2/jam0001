@@ -40,15 +40,16 @@
 
         public void Visit(VarRef varRef) => retVal = rte.Vars[varRef.Id].Value;
 
-        public void Visit(AddExpr addExpr) {
-            var left = Eval(addExpr.Left);
-            var right = Eval(addExpr.Right);
+        public void Visit(PlusExpr plusExpr) {
+            var left = Eval(plusExpr.Left);
+            var right = Eval(plusExpr.Right);
             retVal = (left.Type, right.Type) switch {
-                (Type.Int,   Type.Int)   => new(Type.Int,   left.Int   + right.Int),
-                (Type.Int,   Type.Float) => new(Type.Float, left.Int   + right.Float),
-                (Type.Float, Type.Int)   => new(Type.Float, left.Float + right.Int),
-                (Type.Float, Type.Float) => new(Type.Float, left.Float + right.Float),
-                _ => throw new RuntimeError($"Cannot add left {left} and right {right}.")
+                (Type.Int,    Type.Int)    => new(Type.Int,    left.Int    + right.Int),
+                (Type.Int,    Type.Float)  => new(Type.Float,  left.Int    + right.Float),
+                (Type.Float,  Type.Int)    => new(Type.Float,  left.Float  + right.Int),
+                (Type.Float,  Type.Float)  => new(Type.Float,  left.Float  + right.Float),
+                (Type.String, Type.String) => new(Type.String, left.String + right.String),
+                _ => throw new RuntimeError($"Cannot apply operator '+' to left {left} and right {right}.")
             };
         }
 

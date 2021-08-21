@@ -55,7 +55,7 @@
                 .Should().StartWith("The int value 3 cannot be assigned to float variable 'f'.");
         }
 
-        public class AddOp {
+        public class PlusExpr {
             [Fact] void AddsTwoInts() =>
                 OutputOf(
                     "int x = 1",
@@ -84,19 +84,26 @@
                     "println x + y")
                 .Should().StartWith("1");
 
+            [Fact] void ConcatsStrings() =>
+                OutputOf(
+                    "string s1 = 'foo'",
+                    "string s2 = 'bar'",
+                    "println s1 + s2")
+                .Should().StartWith("foobar");
+
             [Fact] void CannotAddStringToInt() =>
                 OutputOf(
                     "int x = 1",
                     "string y = '2'",
                     "println x + y")
-                .Should().StartWith("Cannot add left int value 1 and right string value '2'.");
+                .Should().StartWith("Cannot apply operator '+' to left int value 1 and right string value '2'.");
 
             [Fact] void CannotAddIntToString() =>
                 OutputOf(
                     "string x = '2'",
                     "int y = 1",
                     "println x + y")
-                .Should().StartWith("Cannot add left string value '2' and right int value 1.");
+                .Should().StartWith("Cannot apply operator '+' to left string value '2' and right int value 1.");
         }
 
         private static string[] OutputOf(params string[] scriptLines) {

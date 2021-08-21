@@ -29,7 +29,7 @@
                 .Lbl("identifier");
 
             var expression = new OPPBuilder<Unit, Expr, Unit>()
-                .WithOperators(ops => ops.AddInfix("+", 10, ws, AddExpr.Of))
+                .WithOperators(ops => ops.AddInfix("+", 10, ws, PlusExpr.Of))
                 .WithTerms(term =>
                     Choice(
                         Between(CharP('(').And(ws), term, CharP(')').And(ws)),

@@ -8,7 +8,7 @@
         void Visit(IntLiteral intLit);
         void Visit(FloatLiteral floatLit);
         void Visit(VarRef varRef);
-        void Visit(AddExpr addExpr);
+        void Visit(PlusExpr addExpr);
     }
 
     public interface Visitable { void Accept(Visitor v); }
@@ -48,8 +48,8 @@
         public void Accept(Visitor v) => v.Visit(this);
     }
 
-    public record AddExpr(Expr Left, Expr Right) : Expr {
-        public static Expr Of(Expr left, Expr right) => new AddExpr(left, right);
+    public record PlusExpr(Expr Left, Expr Right) : Expr {
+        public static Expr Of(Expr left, Expr right) => new PlusExpr(left, right);
         public void Accept(Visitor v) => v.Visit(this);
     }
 }
