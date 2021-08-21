@@ -1,17 +1,19 @@
 ﻿namespace foobar {
+    using System;
+
     using FParsec.CSharp;
 
     public static class CLI {
         public static void Main() {
             var ast = Parser
                 .Parse(
-                    "int x = 123\n" +
+                    "string x = 123\n" +
                     "float y = 0.456\n" +
-                    "float z = x + y\n" +
+                    "float z = x + 'test'\n" +
                     "println z")
                 .GetResult();
-
-            Interpreter.Interpret(ast, RTE.Builtin);
+            var rte = RTE.WithPrelude(stdout: Console.Out);
+            Interpreter.Interpret(ast, rte);
         }
     }
 }

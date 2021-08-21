@@ -2,7 +2,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Linq;
 
     public enum Type { Void, Int, Float, String }
@@ -28,14 +28,15 @@
     }
     public record Func(string Id, Param[] Params, Func<IEnumerable<Value>, Value> Execute);
 
-    public record RTE(ImmutableDictionary<string, Var> Vars, ImmutableDictionary<string, Func> Funcs) {
-        public static RTE Builtin => new(
+    public record RTE(ImmutableDictionary<string, Var> Vars, ImmutableDictionary<string, Func> Funcs, TextWriter StdOut) {
+        public static RTE WithPrelude(TextWriter stdout) => new(
             Vars: ImmutableDictionary<string, Var>.Empty,
             Funcs: ImmutableDictionary<string, Func>.Empty
                 .Add("println", new Func("println", new[] { new Param("s", Type.String) }, args => {
-                    Console.WriteLine(args.Single().RawVal);
+                    stdout.WriteLine(args.Single().RawVal);
                     return Value.Void;
-                })));
+                })),
+            stdout);
 
         public RTE Add(Var v) => this with { Vars = Vars.Add(v.Id, v) };
 

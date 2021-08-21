@@ -1,5 +1,4 @@
 ﻿namespace foobar {
-    using System;
     using System.Linq;
     using Microsoft.FSharp.Collections;
 
@@ -13,15 +12,23 @@
         public static void Interpret(FSharpList<Stmnt> stmnts, RTE rte) {
             var interpreter = new Interpreter(rte);
 
-            foreach (var stmnt in stmnts) {
-                stmnt.Accept(interpreter);
+            try {
+                foreach (var stmnt in stmnts) {
+                    stmnt.Accept(interpreter);
+                }
+            } catch (RuntimeError err) {
+                rte.StdOut.WriteLine(err.Message);
             }
         }
 
         public void Visit(FuncCall x) => retVal = rte.Funcs[x.Id].Execute(x.Args.Select(Eval));
 
         public void Visit(VarDecl x) {
-            rte = rte.Add(new Var(x.Id, Eval(x.Value)));
+            var varVal = Eval(x.Value);
+
+            if (varVal.Type != x.Type) throw new RuntimeError($"The {varVal} cannot be assigned to {x}.");
+
+            rte = rte.Add(new Var(x.Id, varVal));
             retVal = Value.Void;
         }
 
@@ -41,7 +48,7 @@
                 (Type.Int,   Type.Float) => new(Type.Float, left.IntVal   + right.FloatVal),
                 (Type.Float, Type.Int)   => new(Type.Float, left.FloatVal + right.IntVal),
                 (Type.Float, Type.Float) => new(Type.Float, left.FloatVal + right.FloatVal),
-                _ => throw new Exception($"Cannot add left {left} and right {right}.")
+                _ => throw new RuntimeError($"Cannot add left {left} and right {right}.")
             };
         }
 

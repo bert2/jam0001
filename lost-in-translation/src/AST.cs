@@ -25,6 +25,7 @@
     public record VarDecl(Type Type, string Id, Expr Value) : Stmnt {
         public static Stmnt Of(Type type, string id, Expr value) => new VarDecl(type, id, value);
         public void Accept(Visitor v) => v.Visit(this);
+        public override string ToString() => $"{Type.ToString().ToLower()} variable '{Id}'";
     }
 
     public record StringLiteral(string Value) : Expr {

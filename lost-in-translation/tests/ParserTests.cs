@@ -1,6 +1,3 @@
-#pragma warning disable IDE0051 // Remove unused private members
-#pragma warning disable RCS1018 // Add accessibility modifiers (or vice versa).
-
 namespace tests {
     using FluentAssertions;
     using FParsec.CSharp;
@@ -10,7 +7,7 @@ namespace tests {
 
     using static foobar.Parser;
 
-    public class Tests {
+    public class ParserTests {
         [Fact] void HelloWorld() =>
             Parse("println 'hello world'").GetResult()
             .Should().ContainSingle()
