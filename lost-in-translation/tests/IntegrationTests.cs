@@ -1,8 +1,6 @@
 ﻿namespace tests {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Text;
 
     using FluentAssertions;
@@ -77,7 +75,7 @@
                     "println x + y")
                 .Should().StartWith("1.23");
 
-            [Fact] void AddsFloatToFloat() =>
+            [Fact] void AddsTwoFloats() =>
                 OutputOf(
                     "float x = 0.23",
                     "float y = 0.77",
@@ -105,6 +103,10 @@
                     "println x + y")
                 .Should().StartWith("Cannot apply operator '+' to left string value '2' and right int value 1.");
         }
+
+        [Fact] void ArithmeticExpr() =>
+            OutputOf("println ((1 + 2) + (3 + (4.5 + 6.7)))")
+            .Should().StartWith("17.2");
 
         private static string[] OutputOf(params string[] scriptLines) {
             var script = string.Join(Environment.NewLine, scriptLines);
