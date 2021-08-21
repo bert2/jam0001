@@ -1,9 +1,11 @@
 ﻿namespace foobar {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.IO;
     using System.Linq;
+
+    using Vars = System.Collections.Immutable.ImmutableDictionary<string, Var>;
+    using Funcs = System.Collections.Immutable.ImmutableDictionary<string, Func>;
 
     public enum Type { Void, Int, Float, String }
 
@@ -28,15 +30,12 @@
     }
     public record Func(string Id, Param[] Params, Func<IEnumerable<Value>, Value> Execute);
 
-    public record RTE(ImmutableDictionary<string, Var> Vars, ImmutableDictionary<string, Func> Funcs, TextWriter StdOut) {
-        public static RTE WithPrelude(TextWriter stdout) => new(
-            Vars: ImmutableDictionary<string, Var>.Empty,
-            Funcs: ImmutableDictionary<string, Func>.Empty
-                .Add("println", new Func("println", new[] { new Param("s", Type.String) }, args => {
-                    stdout.WriteLine(args.Single().RawVal);
-                    return Value.Void;
-                })),
-            stdout);
+    public record RTE(Vars Vars, Funcs Funcs, TextWriter StdOut) {
+        public static RTE WithPrelude(TextWriter stdout) => new RTE(Vars.Empty, Funcs.Empty, stdout)
+            .Add(new Func("println", Array.Empty<Param>(), args => {
+                stdout.WriteLine(args.Single().RawVal);
+                return Value.Void;
+            }));
 
         public RTE Add(Var v) => this with { Vars = Vars.Add(v.Id, v) };
 
