@@ -13,18 +13,18 @@
 
     public record Var(string Id, Value Value);
 
-    public record Value(Type Type, object? RawVal) {
+    public record Value(Type Type, object? Raw) {
         public static readonly Value Void = new(Type.Void, null);
 
-        public string StringVal => RawVal as string ?? throw new Exception($"The {this} is not a string.");
+        public string String => Raw as string ?? throw new Exception($"The {this} is not a string.");
 
-        public int IntVal => RawVal as int? ?? throw new Exception($"The {this} is not an int.");
+        public int Int => Raw as int? ?? throw new Exception($"The {this} is not an int.");
 
-        public double FloatVal => RawVal as double? ?? throw new Exception($"The {this} is not a float.");
+        public double Float => Raw as double? ?? throw new Exception($"The {this} is not a float.");
 
         public override string ToString() {
             string PrintType() => Type.ToString().ToLower();
-            string PrintVal() => Type switch { Type.Void => "", Type.String => $" '{RawVal}'", _ => $" {RawVal}" };
+            string PrintVal() => Type switch { Type.Void => "", Type.String => $" '{Raw}'", _ => $" {Raw}" };
             return $"{PrintType()} value{PrintVal()}";
         }
     }
@@ -33,7 +33,7 @@
     public record RTE(Vars Vars, Funcs Funcs, TextWriter StdOut) {
         public static RTE WithPrelude(TextWriter stdout) => new RTE(Vars.Empty, Funcs.Empty, stdout)
             .Add(new Func("println", Array.Empty<Param>(), args => {
-                stdout.WriteLine(args.Single().RawVal);
+                stdout.WriteLine(args.Single().Raw);
                 return Value.Void;
             }));
 

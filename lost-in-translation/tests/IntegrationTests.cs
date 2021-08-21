@@ -29,12 +29,75 @@
                 "world",
                 "");
 
-        [Fact] void AddOp() =>
-            OutputOf(
-                "int x = -1",
-                "float y = 0.23",
-                "println x + y")
-            .Should().StartWith("-0.77");
+        public class VarDecl {
+            [Fact] void Int() => OutputOf("int i = 42").Should().BeEquivalentTo("");
+
+            [Fact] void NegativeInt() => OutputOf("int neg = -42").Should().BeEquivalentTo("");
+
+            [Fact] void Float() => OutputOf("float f = 0.42").Should().BeEquivalentTo("");
+
+            [Fact] void NegativeFloat() => OutputOf("float neg = -0.42").Should().BeEquivalentTo("");
+
+            [Fact] void String() => OutputOf("string str = 'foo'").Should().BeEquivalentTo("");
+
+            [Fact] void EmptyString() => OutputOf("string empty = ''").Should().BeEquivalentTo("");
+
+            [Fact] void CannotAssignStringToInt() =>
+                OutputOf("int i = 'foo'")
+                .Should().StartWith("The string value 'foo' cannot be assigned to int variable 'i'.");
+
+            [Fact] void CannotAssignIntToString() =>
+                OutputOf("string s = 42")
+                .Should().StartWith("The int value 42 cannot be assigned to string variable 's'.");
+
+            [Fact] void CannotAssignIntToFloat() =>
+                OutputOf("float f = 3")
+                .Should().StartWith("The int value 3 cannot be assigned to float variable 'f'.");
+        }
+
+        public class AddOp {
+            [Fact] void AddsTwoInts() =>
+                OutputOf(
+                    "int x = 1",
+                    "int y = 2",
+                    "println x + y")
+                .Should().StartWith("3");
+
+            [Fact] void AddsFloatToInt() =>
+                OutputOf(
+                    "int x = 1",
+                    "float y = 0.23",
+                    "println x + y")
+                .Should().StartWith("1.23");
+
+            [Fact] void AddsIntToFloat() =>
+                OutputOf(
+                    "float x = 0.23",
+                    "int y = 1",
+                    "println x + y")
+                .Should().StartWith("1.23");
+
+            [Fact] void AddsFloatToFloat() =>
+                OutputOf(
+                    "float x = 0.23",
+                    "float y = 0.77",
+                    "println x + y")
+                .Should().StartWith("1");
+
+            [Fact] void CannotAddStringToInt() =>
+                OutputOf(
+                    "int x = 1",
+                    "string y = '2'",
+                    "println x + y")
+                .Should().StartWith("Cannot add left int value 1 and right string value '2'.");
+
+            [Fact] void CannotAddIntToString() =>
+                OutputOf(
+                    "string x = '2'",
+                    "int y = 1",
+                    "println x + y")
+                .Should().StartWith("Cannot add left string value '2' and right int value 1.");
+        }
 
         private static string[] OutputOf(params string[] scriptLines) {
             var script = string.Join(Environment.NewLine, scriptLines);

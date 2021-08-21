@@ -21,33 +21,33 @@
             }
         }
 
-        public void Visit(FuncCall x) => retVal = rte.Funcs[x.Id].Execute(x.Args.Select(Eval));
+        public void Visit(FuncCall funcCall) => retVal = rte.Funcs[funcCall.Id].Execute(funcCall.Args.Select(Eval));
 
-        public void Visit(VarDecl x) {
-            var varVal = Eval(x.Value);
+        public void Visit(VarDecl varDecl) {
+            var varVal = Eval(varDecl.Value);
 
-            if (varVal.Type != x.Type) throw new RuntimeError($"The {varVal} cannot be assigned to {x}.");
+            if (varVal.Type != varDecl.Type) throw new RuntimeError($"The {varVal} cannot be assigned to {varDecl}.");
 
-            rte = rte.Add(new Var(x.Id, varVal));
+            rte = rte.Add(new Var(varDecl.Id, varVal));
             retVal = Value.Void;
         }
 
-        public void Visit(StringLiteral x) => retVal = new(Type.String, x.Value);
+        public void Visit(StringLiteral stringLit) => retVal = new(Type.String, stringLit.Value);
 
-        public void Visit(IntLiteral x) => retVal = new(Type.Int, x.Value);
+        public void Visit(IntLiteral intLit) => retVal = new(Type.Int, intLit.Value);
 
-        public void Visit(FloatLiteral x) => retVal = new(Type.Float, x.Value);
+        public void Visit(FloatLiteral floatLit) => retVal = new(Type.Float, floatLit.Value);
 
-        public void Visit(VarRef x) => retVal = rte.Vars[x.Id].Value;
+        public void Visit(VarRef varRef) => retVal = rte.Vars[varRef.Id].Value;
 
-        public void Visit(AddExpr x) {
-            var left = Eval(x.Left);
-            var right = Eval(x.Right);
+        public void Visit(AddExpr addExpr) {
+            var left = Eval(addExpr.Left);
+            var right = Eval(addExpr.Right);
             retVal = (left.Type, right.Type) switch {
-                (Type.Int,   Type.Int)   => new(Type.Int,   left.IntVal   + right.IntVal),
-                (Type.Int,   Type.Float) => new(Type.Float, left.IntVal   + right.FloatVal),
-                (Type.Float, Type.Int)   => new(Type.Float, left.FloatVal + right.IntVal),
-                (Type.Float, Type.Float) => new(Type.Float, left.FloatVal + right.FloatVal),
+                (Type.Int,   Type.Int)   => new(Type.Int,   left.Int   + right.Int),
+                (Type.Int,   Type.Float) => new(Type.Float, left.Int   + right.Float),
+                (Type.Float, Type.Int)   => new(Type.Float, left.Float + right.Int),
+                (Type.Float, Type.Float) => new(Type.Float, left.Float + right.Float),
                 _ => throw new RuntimeError($"Cannot add left {left} and right {right}.")
             };
         }

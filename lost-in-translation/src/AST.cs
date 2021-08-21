@@ -2,13 +2,13 @@
     using Microsoft.FSharp.Collections;
 
     public interface Visitor {
-        void Visit(FuncCall x);
-        void Visit(VarDecl x);
-        void Visit(StringLiteral x);
-        void Visit(IntLiteral x);
-        void Visit(FloatLiteral x);
-        void Visit(VarRef x);
-        void Visit(AddExpr x);
+        void Visit(FuncCall funcCall);
+        void Visit(VarDecl varDecl);
+        void Visit(StringLiteral stringLit);
+        void Visit(IntLiteral intLit);
+        void Visit(FloatLiteral floatLit);
+        void Visit(VarRef varRef);
+        void Visit(AddExpr addExpr);
     }
 
     public interface Visitable { void Accept(Visitor v); }
