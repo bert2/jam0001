@@ -2,6 +2,7 @@
     using Microsoft.FSharp.Collections;
 
     public interface Visitor {
+        void Visit(Comment comment);
         void Visit(FuncCall funcCall);
         void Visit(VarDecl varDecl);
         void Visit(StringLiteral stringLit);
@@ -16,6 +17,11 @@
     public interface Stmnt: Visitable { }
 
     public interface Expr: Visitable { }
+
+    public record Comment(string Text) : Expr {
+        public static Expr Of(string text) => new Comment(text.Trim());
+        public void Accept(Visitor v) => v.Visit(this);
+    }
 
     public record FuncCall(string Id, FSharpList<Expr> Args) : Stmnt {
         public static Stmnt Of(string id, FSharpList<Expr> args) => new FuncCall(id, args);

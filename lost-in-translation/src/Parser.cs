@@ -35,9 +35,10 @@
                         Between(CharP('(').And(ws), term, CharP(')').And(ws)),
                         Between('\'', ManyChars(c => c is not '\'' and not '\r' and not '\n'), '\'')
                             .And(ws).Map(StringLiteral.Of).Lbl("string literal"),
+                        Skip(StringP("//").And(ws)).And(ManyChars(c => c is not '\r' and not '\n')).Map(Comment.Of).Lbl("comment"),
+                        identifier.And(ws).Map(VarRef.Of),
                         Int.AndTry(NotFollowedBy(CharP('.'))).And(ws).Map(IntLiteral.Of).Lbl("integer"),
-                        Float.And(ws).Map(FloatLiteral.Of).Lbl("decimal number"),
-                        identifier.And(ws).Map(VarRef.Of))
+                        Float.And(ws).Map(FloatLiteral.Of).Lbl("decimal number"))
                     .Lbl("expression"))
                 .Build();
 

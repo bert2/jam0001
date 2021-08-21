@@ -27,7 +27,7 @@
                 "world",
                 "");
 
-        public class VarDecl {
+        public class VarDecls {
             [Fact] void Int() => OutputOf("int i = 42").Should().BeEquivalentTo("");
 
             [Fact] void NegativeInt() => OutputOf("int neg = -42").Should().BeEquivalentTo("");
@@ -53,7 +53,7 @@
                 .Should().StartWith("The int value 3 cannot be assigned to float variable 'f'.");
         }
 
-        public class PlusExpr {
+        public class PlusExprs {
             [Fact] void AddsTwoInts() =>
                 OutputOf(
                     "int x = 1",
@@ -107,6 +107,14 @@
         [Fact] void ArithmeticExpr() =>
             OutputOf("println ((1 + 2) + (3 + (4.5 + 6.7)))")
             .Should().StartWith("17.2");
+
+        public class Comments {
+            [Fact] void Test() =>
+                OutputOf(
+                    "int cnt = // the count of rows in the db",
+                    "println cnt + 1")
+                .Should().StartWith("the count of rows in the db incremented by 1");
+        }
 
         private static string[] OutputOf(params string[] scriptLines) {
             var script = string.Join(Environment.NewLine, scriptLines);

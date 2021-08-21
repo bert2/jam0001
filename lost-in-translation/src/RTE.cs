@@ -7,7 +7,7 @@
     using Vars = System.Collections.Immutable.ImmutableDictionary<string, Var>;
     using Funcs = System.Collections.Immutable.ImmutableDictionary<string, Func>;
 
-    public enum Type { Void, Int, Float, String }
+    public enum Type { Void, Comment, Int, Float, String }
 
     public record Param(string Id, Type Type);
 
@@ -26,7 +26,7 @@
 
         public override string ToString() {
             string PrintType() => Type.ToString().ToLower();
-            string PrintVal() => Type switch { Type.Void => "", Type.String => $" '{Raw}'", _ => $" {Raw}" };
+            string PrintVal() => Type switch { Type.Void => "", Type.String => $" '{Raw}'", Type.Comment => $" '{Raw}'", _ => $" {Raw}" };
             return $"{PrintType()} value{PrintVal()}";
         }
     }
