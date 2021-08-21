@@ -8,7 +8,7 @@
         void Visit(IntLiteral intLit);
         void Visit(FloatLiteral floatLit);
         void Visit(VarRef varRef);
-        void Visit(PlusExpr addExpr);
+        void Visit(PlusExpr plusExpr);
     }
 
     public interface Visitable { void Accept(Visitor v); }

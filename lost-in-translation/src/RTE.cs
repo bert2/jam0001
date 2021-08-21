@@ -13,6 +13,8 @@
 
     public record Var(string Id, Value Value);
 
+    public record Func(string Id, Param[] Params, Func<IEnumerable<Value>, Value> Execute);
+
     public record Value(Type Type, object? Raw) {
         public static readonly Value Void = new(Type.Void, null);
 
@@ -28,7 +30,6 @@
             return $"{PrintType()} value{PrintVal()}";
         }
     }
-    public record Func(string Id, Param[] Params, Func<IEnumerable<Value>, Value> Execute);
 
     public record RTE(Vars Vars, Funcs Funcs, TextWriter StdOut) {
         public static RTE WithPrelude(TextWriter stdout) => new RTE(Vars.Empty, Funcs.Empty, stdout)
